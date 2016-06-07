@@ -21,14 +21,14 @@ _user$project$Main_ops['=>'] = F2(
 	function (v0, v1) {
 		return {ctor: '_Tuple2', _0: v0, _1: v1};
 	});
-var _user$project$Main$Box = F2(
+var _user$project$Main$Model = F2(
 	function (a, b) {
 		return {position: a, drag: b};
 	});
 var _user$project$Main$init = {
 	ctor: '_Tuple2',
 	_0: A2(
-		_user$project$Main$Box,
+		_user$project$Main$Model,
 		A2(_elm_lang$mouse$Mouse$Position, 200, 200),
 		_elm_lang$core$Maybe$Nothing),
 	_1: _elm_lang$core$Platform_Cmd$none
@@ -46,13 +46,13 @@ var _user$project$Main$updateHelp = F2(
 			case 'DragStart':
 				var _p9 = _p8._0;
 				return A2(
-					_user$project$Main$Box,
+					_user$project$Main$Model,
 					_p12,
 					_elm_lang$core$Maybe$Just(
 						A2(_user$project$Main$Drag, _p9, _p9)));
 			case 'DragAt':
 				return A2(
-					_user$project$Main$Box,
+					_user$project$Main$Model,
 					_p12,
 					A2(
 						_elm_lang$core$Maybe$map,
@@ -63,7 +63,7 @@ var _user$project$Main$updateHelp = F2(
 						_p7.drag));
 			default:
 				return A2(
-					_user$project$Main$Box,
+					_user$project$Main$Model,
 					_user$project$Main$getPosition(_p7),
 					_elm_lang$core$Maybe$Nothing);
 		}
@@ -76,9 +76,6 @@ var _user$project$Main$update = F2(
 			_1: _elm_lang$core$Platform_Cmd$none
 		};
 	});
-var _user$project$Main$Pos = function (a) {
-	return {position: a};
-};
 var _user$project$Main$DragEnd = function (a) {
 	return {ctor: 'DragEnd', _0: a};
 };
@@ -106,7 +103,6 @@ var _user$project$Main$onMouseDown = A2(
 	'mousedown',
 	A2(_elm_lang$core$Json_Decode$map, _user$project$Main$DragStart, _elm_lang$mouse$Mouse$position));
 var _user$project$Main$view = function (model) {
-	var realPosition = _user$project$Main$getPosition(model);
 	return A2(
 		_elm_lang$html$Html$div,
 		_elm_lang$core$Native_List.fromArray(
@@ -124,11 +120,11 @@ var _user$project$Main$view = function (model) {
 						A2(
 						_user$project$Main_ops['=>'],
 						'left',
-						_user$project$Main$px(realPosition.x)),
+						_user$project$Main$px(model.position.x)),
 						A2(
 						_user$project$Main_ops['=>'],
 						'top',
-						_user$project$Main$px(realPosition.y)),
+						_user$project$Main$px(model.position.y)),
 						A2(_user$project$Main_ops['=>'], 'color', 'white'),
 						A2(_user$project$Main_ops['=>'], 'display', 'flex'),
 						A2(_user$project$Main_ops['=>'], 'align-items', 'center'),

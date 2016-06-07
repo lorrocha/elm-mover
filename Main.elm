@@ -3,7 +3,9 @@ import Html.App as Html
 import Html.Attributes exposing (..)
 import Html.Events exposing (on)
 import Json.Decode as Json exposing ((:=))
-import Mouse exposing (..)
+import Mouse exposing (Position)
+
+
 
 main =
   Html.program
@@ -13,58 +15,60 @@ main =
     , subscriptions = subscriptions
     }
 
+
 -- MODEL
-type alias Box =
+
+
+type alias Model =
     { position : Position
     , drag : Maybe Drag
     }
+
 
 type alias Drag =
     { start : Position
     , current : Position
     }
 
-type alias Pos =
-    { position : Position
-    }
 
-init : ( Box, Cmd Msg )
+init : ( Model, Cmd Msg )
 init =
-  ( Box (Position 200 200) Nothing, Cmd.none )
+  ( Model (Position 200 200) Nothing, Cmd.none )
 
 
 
 -- UPDATE
+
+
 type Msg
     = DragStart Position
     | DragAt Position
     | DragEnd Position
 
 
-update : Msg -> Box -> ( Box, Cmd Msg )
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
   ( updateHelp msg model, Cmd.none )
 
 
-updateHelp : Msg -> Box -> Box
+updateHelp : Msg -> Model -> Model
 updateHelp msg ({position, drag} as model) =
   case msg of
     DragStart xy ->
-      Box position (Just (Drag xy xy))
-
+      Model position (Just (Drag xy xy))
 
     DragAt xy ->
-      Box position (Maybe.map (\{start} -> Drag start xy) drag)
+      Model position (Maybe.map (\{start} -> Drag start xy) drag)
 
     DragEnd _ ->
-      Box (getPosition model) Nothing
+      Model (getPosition model) Nothing
 
 
 
 -- SUBSCRIPTIONS
 
 
-subscriptions : Box -> Sub Msg
+subscriptions : Model -> Sub Msg
 subscriptions model =
   case model.drag of
     Nothing ->
@@ -81,12 +85,8 @@ subscriptions model =
 (=>) = (,)
 
 
-view : Box -> Html Msg
+view : Model -> Html Msg
 view model =
-  let
-    realPosition =
-      getPosition model
-  in
     div
       [ onMouseDown
       , style
@@ -97,8 +97,8 @@ view model =
           , "height" => "100px"
           , "border-radius" => "4px"
           , "position" => "absolute"
-          , "left" => px realPosition.x
-          , "top" => px realPosition.y
+          , "left" => px model.position.x
+          , "top" => px model.position.y
 
           , "color" => "white"
           , "display" => "flex"
@@ -115,7 +115,7 @@ px number =
   toString number ++ "px"
 
 
-getPosition : Box -> Position
+getPosition : Model -> Position
 getPosition {position, drag} =
   case drag of
     Nothing ->
